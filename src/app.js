@@ -28,7 +28,7 @@ app.post("/clients", async (req, res) => {
 
 
 })
-app.get("/clients", async (req, res) => {
+app.get("/", async (req, res) => {
     try {
         const ClientList = await Clients.find();
         res.status(200).send(ClientList);
