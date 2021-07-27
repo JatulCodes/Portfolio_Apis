@@ -9,6 +9,18 @@ app.use(express.json());
 app.use(express.urlencoded({extended:false}));
 
 
+<<<<<<< HEAD
+=======
+    try {
+        const user = new Clients(req.body);
+        const createUser = await user.save();
+        res.status(201).send(createUser);
+
+    } catch (e) { res.status(400).send(e); }
+
+
+})
+>>>>>>> 0afd0ed11a4e6fb65fffff664600243f2e3f6025
 app.get("/", async (req, res) => {
     try {
         const ClientList = await Clients.find();
