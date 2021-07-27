@@ -2,33 +2,14 @@ const express = require("express");
 const app = express();
 require("./db/conns");
 const Clients = require("./models/clients");
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 
 
 app.use(express.json());
-//create a clents connection
-// app.post("/clients",(req,res)=>{
-//     console.log(req.body)
-//     const user = new Clients(req.body);
-//     user.save().then(()=>{
-//         res.status(201).send(user);
-//     }).catch((e)=>{
-//         res.status(400).send(e);
-//     })
-// })
-
-app.post("/clients", async (req, res) => {
-
-    try {
-        const user = new Clients(req.body);
-        const createUser = await user.save();
-        res.status(201).send(createUser);
-
-    } catch (e) { res.status(400).send(e); }
+app.use(express.urlencoded({extended:false}));
 
 
-})
-app.get("/clients", async (req, res) => {
+app.get("/", async (req, res) => {
     try {
         const ClientList = await Clients.find();
         res.status(200).send(ClientList);
@@ -36,6 +17,27 @@ app.get("/clients", async (req, res) => {
     } catch (e) { res.status(400).send(e); }
 
 })
+app.post("/clients",async (req, res) => {
+        const {Name, email, Subject,Message} =req.body
+    
+        if(!Name|| !email|| !Subject||  !Message){
+            return res.status(422).json({error: "Plase fill the complete form!"})
+        }
+        try{
+            const userExist = await Clients.findOne({email:email });
+            if(userExist){
+                return res.status(422).json({error:"Email already exist plase try some other Email Address"});
+            }
+            const user= new Clients({Name, email, Subject,Message});
+
+            await user.save();
+            res.status(201).json({message:"User registerd successfuly"});
+
+        }catch(err){
+            console.log(err);
+
+        }
+});
 app.get("/clients/:id", async (req, res) => {
     try {
         const _id = (req.params.id);
@@ -80,5 +82,5 @@ app.delete("/clients/:id", async (req, res) => {
 
 //server connection
 app.listen(port, () => {
-    console.log(`chal gaya bc ${port}`);
+    console.log(`server running on ${port}`);
 })

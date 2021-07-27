@@ -2,44 +2,38 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 
 
-const clientsdata = new mongoose.Schema({
+const portfolioApi = new mongoose.Schema({
 
-    name: {
+    Name: {
         type: String,
         required: true,
-        minlength: 4,
+        minlength: 2,
 
     },
     email: {
+        
         type: String,
         required: true,
+        index:true,
+        sparse:true,
         unique: [true, "Email is already exist"],
         validate(value) {
     if (!validator.isEmail(value)) {
     throw new Error("invalid email id")
-            }
-        }
-    },
-    subject:{
+    }
+}
+            },
+
+    Subject:{
         type:String,
         required:true,
-        max:10,
-        min:20
+        
     },
-    phone:{
-        type:Number,
-        min:10,
-        required:true,
-        unique:true
-    },
-   
-    textArea:{
+    Message:{
         type:String,
-        max:10,
-        min:20
     }
 })
 
-const Clients = new mongoose.model('Clients',clientsdata);
+const Clients = new mongoose.model('Clients',portfolioApi);
 
 module.exports = Clients;
