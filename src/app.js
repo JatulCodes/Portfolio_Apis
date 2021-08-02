@@ -1,15 +1,19 @@
 const express = require("express");
+const cors = require('cors')
 const app = express();
-require("./db/conns");
+require ('./db/conns');
 const Clients = require("./models/clients");
 const port = process.env.PORT || 8000;
 
 
+
+
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+app.use(cors())
 
 
-app.get("/", async (req, res) => {
+app.get("/clients", async (req, res) => {
     try {
         const ClientList = await Clients.find();
         res.status(200).send(ClientList);
@@ -26,7 +30,7 @@ app.post("/clients",async (req, res) => {
         try{
             const userExist = await Clients.findOne({email:email });
             if(userExist){
-                return res.status(422).json({error:"Email already exist plase try some other Email Address"});
+                return res.status(422).json({alert:"Email already exist plase try some other Email Address"});
             }
             const user= new Clients({Name, email, Subject,Message});
 
